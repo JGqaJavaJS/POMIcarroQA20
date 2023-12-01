@@ -12,7 +12,21 @@ public class ContactListPage extends BasePage{
     @FindBy(xpath = "//*[@text='Contact list']")
     MobileElement textTitle;
 
+    @FindBy(xpath = "//android.widget.ImageView[@content-desc='More options']")
+    MobileElement menuMoreOptions;
+    // class android.widget.ImageView
+    // accessibility id	   = More options
+
+    @FindBy(xpath = "//*[@resource-id='com.sheygam.contactapp:id/title']")
+    MobileElement btnLogout;
+
     public boolean validateContactListOpened() {
         return isTextEqual(textTitle, "Contact list");
+    }
+
+    public AuthenticationPage logout() {
+        clickBase(menuMoreOptions);
+        clickBase(btnLogout);
+        return new AuthenticationPage(driver);
     }
 }

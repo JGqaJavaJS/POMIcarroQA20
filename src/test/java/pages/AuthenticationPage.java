@@ -64,4 +64,15 @@ public class AuthenticationPage extends BasePage{
     public boolean validateErrorTitleAlertCorrect() {
         return isTextEqual(titleErrorTextAlert, "Error");
     }
+
+    public ContactListPage registration(UserDTO user) {
+        fillEmail(user.getEmail());
+        fillPassword(user.getPassword());
+        return clickRegBtn();
+    }
+
+    public AuthenticationPage clickRegBtnNegative() {
+        clickBase(btnRegistration);
+        return this;
+    }
 }
