@@ -63,7 +63,8 @@ public class AddNewContactTests extends AppiumConfig {
                         .address("Haifa")
                         .description("contact: " + i)
                         .build())
-                .validateCurrentContactCreated(i));
+             //   .validateCurrentContactCreated(i));
+                        .isPhoneNumberOnThePage("1234567" + i));
         // fill fields on the add new contact page and click create
         // some validation?
     }

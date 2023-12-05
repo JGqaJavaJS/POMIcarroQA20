@@ -2,8 +2,12 @@ package pages;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import tests.AddNewContactTests;
+
+import java.util.List;
 
 public class ContactListPage extends BasePage{
     public ContactListPage(AppiumDriver<MobileElement> driver) {
@@ -21,8 +25,27 @@ public class ContactListPage extends BasePage{
     @FindBy(xpath = "//*[@resource-id='com.sheygam.contactapp:id/title']")
     MobileElement btnLogout;
 
+    @FindBy(xpath = "//*[@resource-id='android:id/button1']")
+    MobileElement btnYesDeleteContact;
+
     @FindBy(xpath = "//*[@class='android.widget.ImageButton']")
     MobileElement btnAddNewContact;
+
+    @FindBy(xpath = "//*[@resource-id='com.sheygam.contactapp:id/rowPhone']")
+    List<MobileElement> allPhoneNumbers;
+
+    public boolean isPhoneNumberOnThePage (String phoneNumber) {
+        boolean flag = false;
+        try {
+            By by = By.xpath(String.format("//*[@text='%s']", phoneNumber));
+            driver.findElement(by);
+            flag = true;
+            System.out.println(flag + "-------------------------");
+        }catch(Exception e) {
+            e.getMessage();
+        }
+        return flag;
+    }
 
     public boolean validateContactListOpened() {
         return isTextEqual(textTitle, "Contact list");
@@ -40,6 +63,21 @@ public class ContactListPage extends BasePage{
     }
 
     public boolean validateCurrentContactCreated(int i) {
-        return true;
+        boolean flagRes = false;
+        for(MobileElement el: allPhoneNumbers) {
+            if(getTextBase(el).contains(String.valueOf(i))) {
+                flagRes = true;
+                break;
+            }
+        }
+        return flagRes;
+    }
+
+    public ContactListPage moveContactByPhoneNumberToTheRight(String phone) {
+    }
+
+    public ContactListPage clickYesBtnPopUpForContactDelete() {
+        clickBase(btnYesDeleteContact);
+        return this;
     }
 }
