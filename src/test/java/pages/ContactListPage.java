@@ -2,10 +2,13 @@ package pages;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import tests.AddNewContactTests;
+import org.openqa.selenium.Rectangle;
 
 import java.util.List;
 
@@ -34,11 +37,14 @@ public class ContactListPage extends BasePage{
     @FindBy(xpath = "//*[@resource-id='com.sheygam.contactapp:id/rowPhone']")
     List<MobileElement> allPhoneNumbers;
 
+    public By getElementByPhoneNumber(String phone) {
+        return By.xpath(String.format("//*[@text='%s']", phone));
+    }
+
     public boolean isPhoneNumberOnThePage (String phoneNumber) {
         boolean flag = false;
         try {
-            By by = By.xpath(String.format("//*[@text='%s']", phoneNumber));
-            driver.findElement(by);
+            getElementBy(getElementByPhoneNumber(phoneNumber));
             flag = true;
             System.out.println(flag + "-------------------------");
         }catch(Exception e) {
@@ -74,6 +80,24 @@ public class ContactListPage extends BasePage{
     }
 
     public ContactListPage moveContactByPhoneNumberToTheRight(String phone) {
+        MobileElement phoneNumber = getElementBy(getElementByPhoneNumber(phone));
+
+        Rectangle rect = phoneNumber.getRect();
+        int xStart = rect.getX() + rect.getWidth()/8;
+        int xEnd = rect.getX() + rect.getWidth()*6/8;
+        int y = rect.getY() + rect.getHeight()/2;
+
+        TouchAction<?> touchAction = new TouchAction<>(driver);
+
+        touchAction
+                .longPress(PointOption.point(xStart, y))
+                .moveTo(PointOption.point(xEnd, y))
+                .release()
+                .perform();
+
+        pause(10000);
+
+        return this;
     }
 
     public ContactListPage clickYesBtnPopUpForContactDelete() {
