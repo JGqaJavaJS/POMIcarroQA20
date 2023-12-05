@@ -48,6 +48,7 @@ public class AddNewContactTests extends AppiumConfig {
     }
 
     @Test
+            //(invocationCount = 15)
     public void positiveAddNewContact() {
         int i;
         i = new Random().nextInt(1000) + 1000;

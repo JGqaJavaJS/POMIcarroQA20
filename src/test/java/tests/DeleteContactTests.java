@@ -12,7 +12,7 @@ import pages.SplashPage;
 
 import java.util.Random;
 
-public class DeleteContact extends AppiumConfig {
+public class DeleteContactTests extends AppiumConfig {
 
     @BeforeClass
     public void beforeClass() {
@@ -46,6 +46,24 @@ public class DeleteContact extends AppiumConfig {
                 .moveContactByPhoneNumberToTheRight("1234567" + i)
                 .clickYesBtnPopUpForContactDelete()
                 .isPhoneNumberOnThePage("1234567" + i));
+    }
+
+    @Test
+    public void deleteAllContacts() {
+        int i;
+        i = new Random().nextInt(1000) + 1000;
+        System.out.println(i);
+        Assert.assertTrue(new ContactListPage(driver).clickBtnAddNewContact()
+                .addNewContact(ContactDTO.builder()
+                        .name("testQA20" + i)
+                        .lastName("lN"+i)
+                        .email("test" + i + "@gmail.af")
+                        .phone("1234567" + i)
+                        .address("Haifa")
+                        .description("contact: " + i)
+                        .build())
+                .deleteAllContacts()
+                .validateContactListEmpty());
     }
 
 

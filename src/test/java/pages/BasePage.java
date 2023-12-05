@@ -2,9 +2,14 @@ package pages;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.pagefactory.AppiumFieldDecorator;
+import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class BasePage {
 
@@ -15,8 +20,12 @@ public class BasePage {
         PageFactory.initElements(new AppiumFieldDecorator(driver), this);
     }
 
-    public MobileElement getElementBy(By by) {
+    public MobileElement findElementBase(By by) {
         return driver.findElement(by);
+    }
+
+    public void waitElement(MobileElement el, int time) {
+        new WebDriverWait(driver, time).until(ExpectedConditions.visibilityOf(el));
     }
 
     public void typeTextBase(MobileElement el, String text) {
@@ -54,6 +63,23 @@ public class BasePage {
 
     public void backBtnOnEmulator() {
         driver.navigate().back();
+    }
+
+    public void scrollToElementBaseBy(By by) {
+        scrollToElementMobEl(findElementBase(by));
+    }
+
+    public void scrollToElementMobEl(MobileElement el) {
+        Rectangle rect = el.getRect();
+        int xTo = rect.getX() + rect.getWidth()/2;
+        int yTo = rect.getY() + rect.getHeight()/2;
+
+        TouchAction<?> action = new TouchAction<>(driver);
+        action
+                .longPress(PointOption.point(xTo, yTo))
+                .moveTo(PointOption.point(xTo, 0))
+                .release()
+                .perform();
     }
 
 }
