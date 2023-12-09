@@ -45,14 +45,14 @@ public class ContactListPage extends BasePage{
         return By.xpath(String.format("//*[@text='%s']", phone));
     }
 
-    public ContactListPage scrollToPhoneNumber(String phoneNumber) {
-        try {
-            scrollToElementBaseBy(getElementByPhoneNumber(phoneNumber));
-        }catch(Exception e) {
-            e.getMessage();
-        }
-        return this;
-    }
+//    public ContactListPage scrollToPhoneNumber(String phoneNumber) {
+//        try {
+//            scrollToElementBaseBy(getElementByPhoneNumber(phoneNumber));
+//        }catch(Exception e) {
+//            e.getMessage();
+//        }
+//        return this;
+//    }
 
     public boolean isPhoneNumberOnThePage (String phoneNumber) {
         waitElement(btnAddNewContact, 5);
@@ -141,6 +141,7 @@ public class ContactListPage extends BasePage{
     }
 
     public ContactListPage moveContactByPhoneNumberToTheRight(String phone) {
+        // good to add scroll
         MobileElement phoneNumber = findElementBase(getElementByPhoneNumber(phone));
 
         Rectangle rect = phoneNumber.getRect();
@@ -156,6 +157,25 @@ public class ContactListPage extends BasePage{
                 .release()
                 .perform();
         return this;
+    }
+
+    public EditContactPage moveContactByPhoneNumberToTheLeft(String phone) {
+        // good to add scroll
+        MobileElement phoneNumber = findElementBase(getElementByPhoneNumber(phone));
+
+        Rectangle rect = phoneNumber.getRect();
+        int xStart = rect.getX() + rect.getWidth()*6/8;
+        int xEnd = rect.getX() + rect.getWidth()/8;
+        int y = rect.getY() + rect.getHeight()/2;
+
+        TouchAction<?> touchAction = new TouchAction<>(driver);
+
+        touchAction
+                .longPress(PointOption.point(xStart, y))
+                .moveTo(PointOption.point(xEnd, y))
+                .release()
+                .perform();
+        return new EditContactPage(driver);
     }
 
     public ContactListPage clickYesBtnPopUpForContactDelete() {
@@ -192,4 +212,16 @@ public class ContactListPage extends BasePage{
         List<MobileElement> list = driver.findElements(allPhones);
         return list.isEmpty();
     }
+
+    public EditContactPage switchLeftContactToEditFirstContact() {
+        waitElement(findElementBase(allPhones), 10);
+        String phone = getTextBase(findElementBase(allPhones));
+        return moveContactByPhoneNumberToTheLeft(phone);
+    }
+
+    public ContactInfoPage clickOnFirstContact() {
+        clickBase(findElementBase(allPhones));
+        return new ContactInfoPage(driver);
+    }
+
 }
